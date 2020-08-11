@@ -15,18 +15,18 @@ pageinate: true
 
 ---
 ### heap領域はどこ？
-![](./heap.png)
+![](./PNG/heap.png)
 
 ---
 ### free時のデータ構造
-![width:700px](./heap2.png)
+![width:700px](./PNG/heap2.png)
 
 ---
 ### malloc時のデータ構造
-![width:700px](./heap3.png)
+![width:700px](./PNG/heap3.png)
 
 ---
-![bg 100%](./heap4.png)
+![bg 100%](./PNG/heap4.png)
 
 ---
 ### free listはこんなに単純？
@@ -57,12 +57,12 @@ pageinate: true
 
 ---
 ### t-cache
-![width:800px](./t-cache1.png)
+![width:800px](./PNG/t-cache1.png)
 
 ---
 ### t-cache
-![width:800px](./t-cache2.png)
+![width:800px](./PNG/t-cache2.png)
 
 ---
 ### t-cache
-![width:800px](./t-cache3.png)
+![width:800px](./PNG/t-cache3.png)
