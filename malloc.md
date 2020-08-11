@@ -66,3 +66,7 @@ pageinate: true
 ---
 ### t-cache
 ![width:800px](./PNG/t-cache3.png)
+
+---
+### fast bin
+
