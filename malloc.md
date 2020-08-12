@@ -14,6 +14,13 @@ pageinate: true
 * 32bit環境の場合は32bit
 
 ---
+### 参考資料
+* https://faraz.faith/2019-10-12-picoctf-2019-heap-challs/
+* https://ctf-wiki.github.io/ctf-wiki/pwn/linux/glibc-heap/heap_structure/
+* ptr-yudaiさんのCTFするぞやwrite-up
+* https://furutsuki.hatenablog.com/entry/2019/02/26/112207
+
+---
 ### heap領域はどこ？
 ![](./PNG/heap.png)
 
@@ -35,7 +42,7 @@ pageinate: true
 	* fast bin
 	* small bin
 	* large bin
-	* Unsorted bin
+	* unsorted bin
 
 ---
 ### t-cache
@@ -69,4 +76,14 @@ pageinate: true
 
 ---
 ### fast bin
+* 小さなメモリブロックをmallocしてはfreeするという処理がよくある
+	* マウスの移動など
+* freeリストで隣接している部分はくっつける
+
+
+---
+### unsorted bin
+* free後すぐに同じ大きさのmallocが呼ばれやすいことから作られた
+
+
 
