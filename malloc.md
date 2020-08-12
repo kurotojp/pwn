@@ -10,7 +10,7 @@ pageinate: true
 * mallocやfreeに関して学ぶ
 * `INTERNAL_SIZE_T prev_size`
 * `INTERNAL_SIZE_T size`
-* INTERNAL_SIZE_Tは64bit環境の場合は64bit
+* INTERNAL_SIZE_T, SIZE_SZは64bit環境の場合は64bit
 * 32bit環境の場合は32bit
 
 ---
@@ -49,7 +49,7 @@ pageinate: true
 * glibc 2.26から追加されたもの
 	* スレッド毎のキャッシュ
 	* 排他制御の必要がないので高速
-* 64bitだと`TCACHE_MAX_BINS`は64になっている
+* 64bitだと`TCACHE_MAX_BINS`(binの種類)は64になっている
 	* キャッシュサイズは0x18, 0x28, 0x38, ... 0x408バイト以下というように区切られている
 	* リンクリストの長さは`TCACHE_FILL_COUNT`によって制限されていて7になっている
 	
@@ -78,7 +78,23 @@ pageinate: true
 ### fast bin
 * 小さなメモリブロックをmallocしてはfreeするという処理がよくある
 	* マウスの移動など
-* freeリストで隣接している部分はくっつける
+* 普通freeリストで隣接している部分はくっつける
+* ↑の条件だと, これは効率が悪い
+	* 隣接部分をくっつける
+		* 中間チェック
+	* mallocの際に切り分ける
+	* を繰り返す
+
+---
+### fast bin
+* デフォルトで最大チャンクサイズは0x80バイト
+* 10個のbinを確保できる
+* LIFO
+* 単方向リスト
+* mallocする際に対応するブロックがあるかどうか判断する
+	* t-cacheの次
+
+
 
 
 ---
