@@ -19,6 +19,8 @@ pageinate: true
 * https://ctf-wiki.github.io/ctf-wiki/pwn/linux/glibc-heap/heap_structure/
 * ptr-yudaiさんのCTFするぞやwrite-up
 * https://furutsuki.hatenablog.com/entry/2019/02/26/112207
+* https://sploitfun.wordpress.com/2015/02/10/understanding-glibc-malloc/
+
 
 ---
 ### heap領域はどこ？
@@ -84,6 +86,7 @@ pageinate: true
 		* 中間チェック
 	* mallocの際に切り分ける
 	* を繰り返す
+* なのでくっつける作業をしない
 
 ---
 ### fast bin
@@ -92,9 +95,27 @@ pageinate: true
 * LIFO
 * 単方向リスト
 * mallocする際に対応するブロックがあるかどうか判断する
-	* t-cacheの次
+	* 多分t-cacheの次に探す
 
+---
+### small bin
+* 62個のチャンク
+	* 0x20, 0x30, ... 0x3f0バイト毎
+	* 2*SIZE_ST*x
+* FIFO
+* 双方向リスト
+* 隣りがfreed chunkだとくっつける
 
+---
+### small bin
+![width:800px](./PNG/smallbin.png)
+
+---
+### large bin
+* 0x400バイト以chunkが対数スケールのサイズ範囲ごとに振り分けられる
+	* 
+* FIFO
+* 双方向リスト
 
 
 ---

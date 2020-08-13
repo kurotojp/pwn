@@ -13,17 +13,18 @@
 <li data-marpit-fragment="1">mallocやfreeに関して学ぶ</li>
 <li data-marpit-fragment="2"><code>INTERNAL_SIZE_T prev_size</code></li>
 <li data-marpit-fragment="3"><code>INTERNAL_SIZE_T size</code></li>
-<li data-marpit-fragment="4">INTERNAL_SIZE_Tは64bit環境の場合は64bit</li>
+<li data-marpit-fragment="4">INTERNAL_SIZE_T, SIZE_SZは64bit環境の場合は64bit</li>
 <li data-marpit-fragment="5">32bit環境の場合は32bit</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="2" data-marpit-fragments="4" data-theme="uncover" style="--theme:uncover;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="2" data-marpit-fragments="5" data-theme="uncover" style="--theme:uncover;">
 <h3>参考資料</h3>
 <ul>
 <li data-marpit-fragment="1"><a href="https://faraz.faith/2019-10-12-picoctf-2019-heap-challs/">https://faraz.faith/2019-10-12-picoctf-2019-heap-challs/</a></li>
 <li data-marpit-fragment="2"><a href="https://ctf-wiki.github.io/ctf-wiki/pwn/linux/glibc-heap/heap_structure/">https://ctf-wiki.github.io/ctf-wiki/pwn/linux/glibc-heap/heap_structure/</a></li>
 <li data-marpit-fragment="3">ptr-yudaiさんのCTFするぞやwrite-up</li>
 <li data-marpit-fragment="4"><a href="https://furutsuki.hatenablog.com/entry/2019/02/26/112207">https://furutsuki.hatenablog.com/entry/2019/02/26/112207</a></li>
+<li data-marpit-fragment="5"><a href="https://sploitfun.wordpress.com/2015/02/10/understanding-glibc-malloc/">https://sploitfun.wordpress.com/2015/02/10/understanding-glibc-malloc/</a></li>
 </ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="3" data-theme="uncover" style="--theme:uncover;">
@@ -62,7 +63,7 @@
 <li data-marpit-fragment="3">排他制御の必要がないので高速</li>
 </ul>
 </li>
-<li data-marpit-fragment="4">64bitだと<code>TCACHE_MAX_BINS</code>は64になっている
+<li data-marpit-fragment="4">64bitだと<code>TCACHE_MAX_BINS</code>(binの種類)は64になっている
 <ul>
 <li data-marpit-fragment="5">キャッシュサイズは0x18, 0x28, 0x38, ... 0x408バイト以下というように区切られている</li>
 <li data-marpit-fragment="6">リンクリストの長さは<code>TCACHE_FILL_COUNT</code>によって制限されていて7になっている</li>
@@ -93,7 +94,7 @@
 <h3>t-cache</h3>
 <p><img src="./PNG/t-cache3.png" alt="width:800px" style="width:800px;" /></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="13" data-marpit-fragments="3" data-theme="uncover" style="--theme:uncover;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="13" data-marpit-fragments="9" data-theme="uncover" style="--theme:uncover;">
 <h3>fast bin</h3>
 <ul>
 <li data-marpit-fragment="1">小さなメモリブロックをmallocしてはfreeするという処理がよくある
@@ -101,10 +102,66 @@
 <li data-marpit-fragment="2">マウスの移動など</li>
 </ul>
 </li>
-<li data-marpit-fragment="3">freeリストで隣接している部分はくっつける</li>
+<li data-marpit-fragment="3">普通freeリストで隣接している部分はくっつける</li>
+<li data-marpit-fragment="4">↑の条件だと, これは効率が悪い
+<ul>
+<li data-marpit-fragment="5">隣接部分をくっつける
+<ul>
+<li data-marpit-fragment="6">中間チェック</li>
+</ul>
+</li>
+<li data-marpit-fragment="7">mallocの際に切り分ける</li>
+<li data-marpit-fragment="8">を繰り返す</li>
+</ul>
+</li>
+<li data-marpit-fragment="9">なのでくっつける作業をしない</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="14" data-marpit-fragments="1" data-theme="uncover" style="--theme:uncover;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="14" data-marpit-fragments="6" data-theme="uncover" style="--theme:uncover;">
+<h3>fast bin</h3>
+<ul>
+<li data-marpit-fragment="1">デフォルトで最大チャンクサイズは0x80バイト</li>
+<li data-marpit-fragment="2">10個のbinを確保できる</li>
+<li data-marpit-fragment="3">LIFO</li>
+<li data-marpit-fragment="4">単方向リスト</li>
+<li data-marpit-fragment="5">mallocする際に対応するブロックがあるかどうか判断する
+<ul>
+<li data-marpit-fragment="6">多分t-cacheの次に探す</li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="15" data-marpit-fragments="6" data-theme="uncover" style="--theme:uncover;">
+<h3>small bin</h3>
+<ul>
+<li data-marpit-fragment="1">62個のチャンク
+<ul>
+<li data-marpit-fragment="2">0x20, 0x30, ... 0x3f0バイト毎</li>
+<li data-marpit-fragment="3">2<em>SIZE_ST</em>x</li>
+</ul>
+</li>
+<li data-marpit-fragment="4">FIFO</li>
+<li data-marpit-fragment="5">双方向リスト</li>
+<li data-marpit-fragment="6">隣りがfreed chunkだとくっつける</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="16" data-theme="uncover" style="--theme:uncover;">
+<h3>small bin</h3>
+<p><img src="./PNG/smallbin.png" alt="width:800px" style="width:800px;" /></p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="17" data-marpit-fragments="4" data-theme="uncover" style="--theme:uncover;">
+<h3>large bin</h3>
+<ul>
+<li data-marpit-fragment="1">0x400バイト以chunkが対数スケールのサイズ範囲ごとに振り分けられる
+<ul>
+<li data-marpit-fragment="2"></li>
+</ul>
+</li>
+<li data-marpit-fragment="3">FIFO</li>
+<li data-marpit-fragment="4">双方向リスト</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="18" data-marpit-fragments="1" data-theme="uncover" style="--theme:uncover;">
 <h3>unsorted bin</h3>
 <ul>
 <li data-marpit-fragment="1">free後すぐに同じ大きさのmallocが呼ばれやすいことから作られた</li>
