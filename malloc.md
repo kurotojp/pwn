@@ -20,6 +20,12 @@ pageinate: true
 * ptr-yudaiさんのCTFするぞやwrite-up
 * https://furutsuki.hatenablog.com/entry/2019/02/26/112207
 * https://sploitfun.wordpress.com/2015/02/10/understanding-glibc-malloc/
+* ももいろテクノロジーの記事
+
+---
+### 目次
+* heap構造を学ぶ
+* heapの攻撃について学ぶ
 
 
 ---
@@ -115,10 +121,46 @@ pageinate: true
 * 0x400バイト以上chunkが対数スケールのサイズ範囲ごとに振り分けられる
 * FIFO
 * 双方向リスト
+* 隣接したchunkはくっつける
 
 ---
 ### unsorted bin
 * free後すぐに同じ大きさのmallocが呼ばれやすいことから作られた
+* small binやlarge binに入る前に一度unsorted binに入れる
+* FIFO
+
+---
+![width:1000px](https://docs.google.com/drawings/d/1Kf_eg7uB2mRjSOasTc4dIu5fuBpTAK0GxbnKVTkZd0Y/pub?w=1217&h=865)
+
+---
+### mmap 
+* large bin以上に大きいサイズを取る場合に使う
+* 本来はファイルをメモリにマップするsyscallらしい
+* デフォルトで128K以上はmmapでkernelから取得する
+* このときfreeするとfreelistには繋がらずに, 直接munmapでkernelに返却する
 
 
+
+---
+### arena
+* 今まで言ってた話はすべてmain_arenaの話
+* シングルスレッドならこれだけで良い
+* マルチスレッドならそれぞれでheap領域が欲しいが...
+	* それぞれがheapをどれだけ使うのかわからない
+	* スレッド数がわからない
+	* 無理
+* ロック競合が起こるまではmain_arenaを用いる
+* ロックが取れないときmmapでスレッド用arenaを作成
+
+---
+### 攻撃手法
+
+---
+### 攻撃手法
+* heap overflow
+* use after free
+* double free
+
+---
+### 
 
