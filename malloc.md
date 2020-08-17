@@ -42,8 +42,8 @@ pageinate: true
 * 実は数種類ある
 	* t-cache
 	* fast bin
-	* small bin
-	* large bin
+	* small bin(あまり重要でなさそう)
+	* large bin(あまり重要でなさそう)
 	* unsorted bin
 
 ---
@@ -112,11 +112,9 @@ pageinate: true
 
 ---
 ### large bin
-* 0x400バイト以chunkが対数スケールのサイズ範囲ごとに振り分けられる
-	* 
+* 0x400バイト以上chunkが対数スケールのサイズ範囲ごとに振り分けられる
 * FIFO
 * 双方向リスト
-
 
 ---
 ### unsorted bin
