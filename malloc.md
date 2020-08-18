@@ -12,6 +12,7 @@ pageinate: true
 * `INTERNAL_SIZE_T size`
 * INTERNAL_SIZE_T, SIZE_SZは64bit環境の場合は64bit
 * 32bit環境の場合は32bit
+* reallocやcallocについては触れない
 
 ---
 ### 参考資料
@@ -162,5 +163,45 @@ pageinate: true
 * double free
 
 ---
-### 
+### heap overflow
+* stack buffer overflowと起きてることは同じ
+	* 書き込み先がheap領域の変数
+	* return addressがheap上にはない
+		* 直接RIPを取るのは無理
+
+---
+### できる可能性のある関数
+* `\n`で止まる
+	* gtes
+	* scanf
+	* vscanf
+* `\x00`で止まる
+	* strcpy
+	* sprintf
+	* strcat
+
+---
+### use after free
+
+
+
+---
+### double free
+
+
+
+---
+### どうやって悪用するんや？
+
+
+---
+### ここからはテクニック的なもの
+* 実際どうやって悪用するのか知りたい人用
+* 
+
+
+---
+### テクニック
+* `__free_hook`
+	* freeするときに実行する関数を指定できる
 
