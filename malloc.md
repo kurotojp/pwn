@@ -165,7 +165,7 @@ pageinate: true
 ---
 ### heap overflow
 * stack buffer overflowと起きてることは同じ
-	* 書き込み先がheap領域の変数
+	* 書き込み先がheap領域
 	* return addressがheap上にはない
 		* 直接RIPを取るのは無理
 
@@ -179,15 +179,18 @@ pageinate: true
 	* strcpy
 	* sprintf
 	* strcat
+* とかね
 
 ---
 ### use after free
-
-
+* freeされている領域に書き込みを行える場合がある
+	* チャンク構造の破壊
+* もしくは読み出し
+	* 読み出すメリットあんまないかもー
 
 ---
 ### double free
-
+* 同じ領域のチャンクを生成する
 
 
 ---
