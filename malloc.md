@@ -103,6 +103,7 @@ pageinate: true
 * 単方向リスト
 * mallocする際に対応するブロックがあるかどうか判断する
 	* 多分t-cacheの次に探す
+* malloc時に次のブロック0x~ - 0x8をチャンクサイズとしてインデックスを計算するチェックが入る
 
 ---
 ### small bin
@@ -139,8 +140,6 @@ pageinate: true
 * 本来はファイルをメモリにマップするsyscallらしい
 * デフォルトで128K以上はmmapでkernelから取得する
 * このときfreeするとfreelistには繋がらずに, 直接munmapでkernelに返却する
-
-
 
 ---
 ### arena
@@ -190,8 +189,10 @@ pageinate: true
 
 ---
 ### double free
-* 同じ領域のチャンクを生成する
-
+* 同じ領域のチャンクを生成する 
+* その後mallocすることで一方はfree listにある状態でもう一方はusedの状態になる
+* チャンク構造の破壊ができる
+* 現在はtcache以外はチェックが入る
 
 ---
 ### どうやって悪用するんや？
@@ -200,8 +201,28 @@ pageinate: true
 ---
 ### ここからはテクニック的なもの
 * 実際どうやって悪用するのか知りたい人用
-* 
+* tcache *
+* unlink attack
+* house of *
 
+
+---
+### tcache *
+* tcache poisoning
+* tcache dup
+
+
+---
+### tcache poisoning
+* tcacheのnext部分を何らかの形で書き換える
+* これによって任意の場所をmallocさせることができる
+* 任意の場所を書き換えることができる
+	* GOT overwriteなどが可能
+
+---
+### tcache dup
+* tcacheはdouble freeのチェックが入らない
+* 
 
 ---
 ### テクニック
