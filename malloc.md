@@ -210,7 +210,8 @@ pageinate: true
 ### tcache *
 * tcache poisoning
 * tcache dup
-
+* tcache perthread corruption
+* tcache house of spirit
 
 ---
 ### tcache poisoning
@@ -218,11 +219,35 @@ pageinate: true
 * これによって任意の場所をmallocさせることができる
 * 任意の場所を書き換えることができる
 	* GOT overwriteなどが可能
+* tcache poisoningは同じ大きさのリストにのみ適応される
 
 ---
 ### tcache dup
 * tcacheはdouble freeのチェックが入らない
-* 
+* double freeでできるものはできる
+	* fast binとかより楽
+
+---
+### tcache perthread corruction
+* tcacheはスレッド毎に確保される
+	* tcache_perthread_structという構造体で管理されている
+* tcache poisoningなどを利用して↑の構造体を書き換える
+* スレッドのtcache全体を制御することができる
+* ↑の構造体はheap領域にある
+
+---
+### tcache house of spirit
+* 元々house of spiritという攻撃がある
+* それのtcache版
+	* tcacheはチェックがないので楽
+* mallocで確保している領域のポインタをどうにかして変える
+* それができれば任意の場所をmallocさせることができる
+	* tcacheでなければnext-0x8などのチェック
+
+---
+### unlink attack
+
+
 
 ---
 ### テクニック
