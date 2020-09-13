@@ -204,6 +204,14 @@ pageinate: true
 * tcache *
 * unlink attack
 * house of *
+* 他
+
+---
+### Unsorted Bin Attack
+* Unsorted binのbkを何らかの形で書き換える
+* アドレス値をより大きな値に変更することができる
+* 
+
 
 
 ---
@@ -212,6 +220,8 @@ pageinate: true
 * tcache dup
 * tcache perthread corruption
 * tcache house of spirit
+* tcache stashing unlink attack
+
 
 ---
 ### tcache poisoning
@@ -245,7 +255,15 @@ pageinate: true
 	* tcacheでなければnext-0x8などのチェック
 
 ---
+### tcache stashing unlink attack
+* 
+
+
+
+---
 ### unlink attack
+* 
+
 
 
 
