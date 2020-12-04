@@ -181,6 +181,8 @@ pageinate: true
 	* strcpy
 	* sprintf
 	* strcat
+* ` `で止まる
+	* scanf
 * とかね
 
 ---
