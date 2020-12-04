@@ -130,6 +130,9 @@ pageinate: true
 * free後すぐに同じ大きさのmallocが呼ばれやすいことから作られた
 * small binやlarge binに入る前に一度unsorted binに入れる
 * FIFO
+* tcache, fastbin, small/large binのあとに探索される
+* 取り出されたサイズのチャンクサイズが十分なら, それを使う
+* 十分でないならsmall/large binにいれる
 
 ---
 ![width:1000px](https://docs.google.com/drawings/d/1Kf_eg7uB2mRjSOasTc4dIu5fuBpTAK0GxbnKVTkZd0Y/pub?w=1217&h=865)
@@ -137,7 +140,7 @@ pageinate: true
 ---
 ### mmap 
 * large bin以上に大きいサイズを取る場合に使う
-* 本来はファイルをメモリにマップするsyscallらしい
+* 本来はファイルをメモリにマップするsyscall
 * デフォルトで128K以上はmmapでkernelから取得する
 * このときfreeするとfreelistには繋がらずに, 直接munmapでkernelに返却する
 
@@ -171,7 +174,7 @@ pageinate: true
 ---
 ### できる可能性のある関数
 * `\n`で止まる
-	* gtes
+	* gets
 	* scanf
 	* vscanf
 * `\x00`で止まる
@@ -210,8 +213,18 @@ pageinate: true
 ### Unsorted Bin Attack
 * Unsorted binのbkを何らかの形で書き換える
 * アドレス値をより大きな値に変更することができる
+* tcache-optionが無効になっているか0x408 byteより大きく, tcacheに入らない場合に機能する
+
+
+---
+### Unsorted Bin Attack
+* Unsorted Binのbkにtarget-0x10を入れる
+* mallocする
 * 
 
+
+---
+![bg 100%](https://ctf-wiki.github.io/ctf-wiki/pwn/linux/glibc-heap/figure/unsorted_bin_attack_order.png)
 
 
 ---

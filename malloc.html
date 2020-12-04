@@ -168,12 +168,15 @@
 <li data-marpit-fragment="4">隣接したchunkはくっつける</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="19" data-marpit-fragments="3" data-theme="uncover" style="--theme:uncover;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="19" data-marpit-fragments="6" data-theme="uncover" style="--theme:uncover;">
 <h3>unsorted bin</h3>
 <ul>
 <li data-marpit-fragment="1">free後すぐに同じ大きさのmallocが呼ばれやすいことから作られた</li>
 <li data-marpit-fragment="2">small binやlarge binに入る前に一度unsorted binに入れる</li>
 <li data-marpit-fragment="3">FIFO</li>
+<li data-marpit-fragment="4">tcache, fastbin, small/large binのあとに探索される</li>
+<li data-marpit-fragment="5">取り出されたサイズのチャンクサイズが十分なら, それを使う</li>
+<li data-marpit-fragment="6">十分でないならsmall/large binにいれる</li>
 </ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="20" data-theme="uncover" style="--theme:uncover;">
@@ -183,7 +186,7 @@
 <h3>mmap</h3>
 <ul>
 <li data-marpit-fragment="1">large bin以上に大きいサイズを取る場合に使う</li>
-<li data-marpit-fragment="2">本来はファイルをメモリにマップするsyscallらしい</li>
+<li data-marpit-fragment="2">本来はファイルをメモリにマップするsyscall</li>
 <li data-marpit-fragment="3">デフォルトで128K以上はmmapでkernelから取得する</li>
 <li data-marpit-fragment="4">このときfreeするとfreelistには繋がらずに, 直接munmapでkernelに返却する</li>
 </ul>
@@ -235,7 +238,7 @@
 <ul>
 <li data-marpit-fragment="1"><code>\n</code>で止まる
 <ul>
-<li data-marpit-fragment="2">gtes</li>
+<li data-marpit-fragment="2">gets</li>
 <li data-marpit-fragment="3">scanf</li>
 <li data-marpit-fragment="4">vscanf</li>
 </ul>
@@ -265,34 +268,122 @@
 </li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="28" data-marpit-fragments="2" data-theme="uncover" style="--theme:uncover;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="28" data-marpit-fragments="4" data-theme="uncover" style="--theme:uncover;">
 <h3>double free</h3>
 <ul>
 <li data-marpit-fragment="1">同じ領域のチャンクを生成する</li>
-<li data-marpit-fragment="2">今はチェックが入るので無理</li>
+<li data-marpit-fragment="2">その後mallocすることで一方はfree listにある状態でもう一方はusedの状態になる</li>
+<li data-marpit-fragment="3">チャンク構造の破壊ができる</li>
+<li data-marpit-fragment="4">現在はtcache以外はチェックが入る</li>
 </ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="29" data-theme="uncover" style="--theme:uncover;">
 <h3>どうやって悪用するんや？</h3>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="30" data-marpit-fragments="4" data-theme="uncover" style="--theme:uncover;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="30" data-marpit-fragments="5" data-theme="uncover" style="--theme:uncover;">
 <h3>ここからはテクニック的なもの</h3>
 <ul>
 <li data-marpit-fragment="1">実際どうやって悪用するのか知りたい人用</li>
-<li data-marpit-fragment="2">tcache poisoning</li>
+<li data-marpit-fragment="2">tcache *</li>
 <li data-marpit-fragment="3">unlink attack</li>
 <li data-marpit-fragment="4">house of *</li>
+<li data-marpit-fragment="5">他</li>
 </ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="31" data-marpit-fragments="3" data-theme="uncover" style="--theme:uncover;">
+<h3>Unsorted Bin Attack</h3>
+<ul>
+<li data-marpit-fragment="1">Unsorted binのbkを何らかの形で書き換える</li>
+<li data-marpit-fragment="2">アドレス値をより大きな値に変更することができる</li>
+<li data-marpit-fragment="3">tcache-optionが無効になっているか0x408 byteより大きく, tcacheに入らない場合に機能する</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="32" data-marpit-fragments="3" data-theme="uncover" style="--theme:uncover;">
+<h3>Unsorted Bin Attack</h3>
+<ul>
+<li data-marpit-fragment="1">Unsorted Binのbkにtarget-0x10を入れる</li>
+<li data-marpit-fragment="2">mallocする</li>
+<li data-marpit-fragment="3"></li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-theme="uncover" style="--theme:uncover;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;https://ctf-wiki.github.io/ctf-wiki/pwn/linux/glibc-heap/figure/unsorted_bin_attack_order.png&quot;);background-size:100%;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="33" data-theme="uncover" style="--theme:uncover;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="34" data-marpit-fragments="5" data-theme="uncover" style="--theme:uncover;">
+<h3>tcache *</h3>
+<ul>
+<li data-marpit-fragment="1">tcache poisoning</li>
+<li data-marpit-fragment="2">tcache dup</li>
+<li data-marpit-fragment="3">tcache perthread corruption</li>
+<li data-marpit-fragment="4">tcache house of spirit</li>
+<li data-marpit-fragment="5">tcache stashing unlink attack</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="35" data-marpit-fragments="5" data-theme="uncover" style="--theme:uncover;">
 <h3>tcache poisoning</h3>
 <ul>
 <li data-marpit-fragment="1">tcacheのnext部分を何らかの形で書き換える</li>
 <li data-marpit-fragment="2">これによって任意の場所をmallocさせることができる</li>
-<li data-marpit-fragment="3"></li>
+<li data-marpit-fragment="3">任意の場所を書き換えることができる
+<ul>
+<li data-marpit-fragment="4">GOT overwriteなどが可能</li>
+</ul>
+</li>
+<li data-marpit-fragment="5">tcache poisoningは同じ大きさのリストにのみ適応される</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="32" data-marpit-fragments="2" data-theme="uncover" style="--theme:uncover;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="36" data-marpit-fragments="3" data-theme="uncover" style="--theme:uncover;">
+<h3>tcache dup</h3>
+<ul>
+<li data-marpit-fragment="1">tcacheはdouble freeのチェックが入らない</li>
+<li data-marpit-fragment="2">double freeでできるものはできる
+<ul>
+<li data-marpit-fragment="3">fast binとかより楽</li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="37" data-marpit-fragments="5" data-theme="uncover" style="--theme:uncover;">
+<h3>tcache perthread corruction</h3>
+<ul>
+<li data-marpit-fragment="1">tcacheはスレッド毎に確保される
+<ul>
+<li data-marpit-fragment="2">tcache_perthread_structという構造体で管理されている</li>
+</ul>
+</li>
+<li data-marpit-fragment="3">tcache poisoningなどを利用して↑の構造体を書き換える</li>
+<li data-marpit-fragment="4">スレッドのtcache全体を制御することができる</li>
+<li data-marpit-fragment="5">↑の構造体はheap領域にある</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="38" data-marpit-fragments="6" data-theme="uncover" style="--theme:uncover;">
+<h3>tcache house of spirit</h3>
+<ul>
+<li data-marpit-fragment="1">元々house of spiritという攻撃がある</li>
+<li data-marpit-fragment="2">それのtcache版
+<ul>
+<li data-marpit-fragment="3">tcacheはチェックがないので楽</li>
+</ul>
+</li>
+<li data-marpit-fragment="4">mallocで確保している領域のポインタをどうにかして変える</li>
+<li data-marpit-fragment="5">それができれば任意の場所をmallocさせることができる
+<ul>
+<li data-marpit-fragment="6">tcacheでなければnext-0x8などのチェック</li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="39" data-marpit-fragments="1" data-theme="uncover" style="--theme:uncover;">
+<h3>tcache stashing unlink attack</h3>
+<ul>
+<li data-marpit-fragment="1"></li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="40" data-marpit-fragments="1" data-theme="uncover" style="--theme:uncover;">
+<h3>unlink attack</h3>
+<ul>
+<li data-marpit-fragment="1"></li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="41" data-marpit-fragments="2" data-theme="uncover" style="--theme:uncover;">
 <h3>テクニック</h3>
 <ul>
 <li data-marpit-fragment="1"><code>__free_hook</code>
