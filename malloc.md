@@ -109,7 +109,7 @@ pageinate: true
 ### small bin
 * 62個のチャンク
 	* 0x20, 0x30, ... 0x3f0バイト毎
-	* 2*SIZE_ST*x
+	* `2*SIZE_ST*x`
 * FIFO
 * 双方向リスト
 * 隣りがfreed chunkだとくっつける
