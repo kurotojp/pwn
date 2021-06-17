@@ -49,9 +49,10 @@ pageinate: true
 * 実は数種類ある
 	* t-cache
 	* fast bin
-	* small bin(あまり重要でなさそう)
-	* large bin(あまり重要でなさそう)
+	* small bin(~~あまり重要でなさそう~~)
+	* large bin(~~あまり重要でなさそう~~)
 	* unsorted bin
+
 
 ---
 ### t-cache
@@ -61,7 +62,8 @@ pageinate: true
 * 64bitだと`TCACHE_MAX_BINS`(binの種類)は64になっている
 	* キャッシュサイズは0x18, 0x28, 0x38, ... 0x408バイト以下というように区切られている
 	* リンクリストの長さは`TCACHE_FILL_COUNT`によって制限されていて7になっている
-	
+* LIFO
+
 ---
 ### t-cache
 * Aを0x10でmallocする
@@ -71,17 +73,18 @@ pageinate: true
 * Cを0x10でmallocする
 * この場合どんな感じになるか
 
----
-### t-cache
-![width:800px](./PNG/t-cache1.png)
 
 ---
 ### t-cache
-![width:800px](./PNG/t-cache2.png)
+![width:500px](./PNG/t-cache1.png)
 
 ---
 ### t-cache
-![width:800px](./PNG/t-cache3.png)
+![width:500px](./PNG/t-cache2.png)
+
+---
+### t-cache
+![width:500px](./PNG/t-cache3.png)
 
 ---
 ### fast bin
@@ -156,6 +159,28 @@ pageinate: true
 * ロックが取れないときmmapでスレッド用arenaを作成
 
 ---
+### free時の優先順位
+1. tchacheに空きがあれば末尾に格納(0x410バイト以下)
+1. fastbinの末尾に格納(0x80バイト以下)
+1. mmapで確保されていればmunmap関数で開放
+1. 前後に統合できるチャンクがあれば統合する
+	1. top以外と統合した場合はunsortedbinの末尾に格納
+1. 統合後のサイズが64KiB以上ならば、malloc_consolidate関数を実行
+
+
+---
+### malloc_consolidate
+* fastbinのチャンクを取り外し、統合しながらunsortedbinに格納する
+* 詳しくは自分で調べよう
+
+
+---
+### malloc時の優先順位
+1. 要求されたサイズをチャンクサイズに変換(malloc(0x10)だと0x20バイト)
+1. tcacheにチャンクがあれば末尾のチャンクを返す
+
+
+---
 ### 攻撃手法
 
 ---
@@ -186,18 +211,27 @@ pageinate: true
 * とかね
 
 ---
+### heap overflow
+* 
+
+
+
+
+---
 ### use after free
 * freeされている領域に書き込みを行える場合がある
 	* チャンク構造の破壊
 * もしくは読み出し
-	* 読み出すメリットあんまないかもー
+	* main_arenaのアドレス特定とか
 
 ---
 ### double free
 * 同じ領域のチャンクを生成する 
 * その後mallocすることで一方はfree listにある状態でもう一方はusedの状態になる
 * チャンク構造の破壊ができる
-* 現在はtcache以外はチェックが入る
+* ~~現在はtcache以外はチェックが入る~~
+	* 現在はtcacheもチェックが入る
+	* ただし、チェックは雑でまだまだ悪用可能
 
 ---
 ### どうやって悪用するんや？
